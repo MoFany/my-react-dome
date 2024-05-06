@@ -35,5 +35,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "todomvc-app-css": "^2.4.3",
+    "todomvc-common": "^1.0.5"
   }
 }

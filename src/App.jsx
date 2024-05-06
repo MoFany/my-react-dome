@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react"; // 修改属性状态值的函数
+import { useEffect, useRef, useState } from "react"; // 修改属性状态值的函数
 import { nanoid } from "nanoid"; //创建随机id的库
 import Todo from "./components/Todo";
 import From from "./components/From";
@@ -113,6 +113,28 @@ function App(props) {
     setTasks(newTaskList);
   }
 
+  // 指定引用初始值为null
+  const listHeadingRef = useRef(null);
+  /**
+   * 函数式焦点管理
+   * @param {焦点状态} value
+   * @returns
+   */
+  function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  }
+  const prevTaskLength = usePrevious(tasks.length);
+  // 焦点管理
+  useEffect(() => {
+    if (tasks.length < prevTaskLength) {
+      listHeadingRef.current.focus();
+    }
+  }, [tasks.length, prevTaskLength]);
+
   // 返回组件内容
   return (
     <div className="todoapp stack-large">
@@ -124,7 +146,9 @@ function App(props) {
       />
 
       <div className="filters btn-group stack-exception">{fliterList}</div>
-      <h2 id="list-heading">{headingText}</h2>
+      <h2 id="list-heading" ref={listHeadingRef}>
+        {headingText}
+      </h2>
 
       {/* 代办任务无序列表 */}
       <ul
